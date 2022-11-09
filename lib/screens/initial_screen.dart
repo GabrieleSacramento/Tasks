@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:testando/components/task.dart';
+import 'package:tasks/components/task.dart';
 
 class InitialScreen extends StatefulWidget {
   const InitialScreen({super.key});
