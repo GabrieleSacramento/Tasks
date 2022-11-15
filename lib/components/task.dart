@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:testando/components/difficulty.dart';
+import 'difficulty.dart';
 
 class Task extends StatefulWidget {
   final String nome;
   final String foto;
   final int dificuldade;
-  const Task(this.nome, this.foto, this.dificuldade, {super.key});
+
+  Task(this.nome, this.foto, this.dificuldade, {Key? key}) : super(key: key);
+
+  int nivel = 0;
 
   @override
   State<Task> createState() => _TaskState();
 }
 
 class _TaskState extends State<Task> {
-  int nivel = 0;
-  int dificuldade = 0;
+  bool assetOrNetwork() {
+    if (widget.foto.contains('http')) {
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -21,11 +29,10 @@ class _TaskState extends State<Task> {
       child: Stack(
         children: [
           Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                color: Colors.blue,
-              ),
-              height: 140),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4), color: Colors.blue),
+            height: 140,
+          ),
           Column(
             children: [
               Container(
@@ -39,25 +46,22 @@ class _TaskState extends State<Task> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blue, width: 4.0),
                         borderRadius: BorderRadius.circular(4),
-                        color: Colors.blue,
+                        color: Colors.black26,
                       ),
-                      width: 80,
+                      width: 72,
                       height: 100,
-                      child: Container(
-                        color: Colors.white,
-                        padding: const EdgeInsets.all(2.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Image.asset(
-                              widget.foto,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: assetOrNetwork()
+                            ? Image.asset(
+                                widget.foto,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                widget.foto,
+                                fit: BoxFit.cover,
+                              ),
                       ),
                     ),
                     Column(
@@ -65,41 +69,40 @@ class _TaskState extends State<Task> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: 200,
-                          child: Text(
-                            widget.nome,
-                            style: const TextStyle(fontSize: 22),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                          child: difficulty(
-                            difficultyLevel: widget.dificuldade,
-                          ),
+                            width: 200,
+                            child: Text(
+                              widget.nome,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )),
+                        Difficulty(
+                          dificultyLevel: widget.dificuldade,
                         ),
                       ],
                     ),
                     SizedBox(
-                      height: 60,
-                      width: 60,
+                      height: 52,
+                      width: 52,
                       child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            nivel++;
-                          });
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.arrow_drop_up),
-                            Text(
-                              'Lvl Up',
-                              style: TextStyle(fontSize: 8),
-                            ),
-                          ],
-                        ),
-                      ),
+                          onPressed: () {
+                            setState(() {
+                              widget.nivel++;
+                            });
+                            // print(nivel);
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: const [
+                              Icon(Icons.arrow_drop_up),
+                              Text(
+                                'UP',
+                                style: TextStyle(fontSize: 12),
+                              )
+                            ],
+                          )),
                     )
                   ],
                 ),
@@ -114,7 +117,7 @@ class _TaskState extends State<Task> {
                       child: LinearProgressIndicator(
                         color: Colors.white,
                         value: (widget.dificuldade > 0)
-                            ? (nivel / widget.dificuldade) / 10
+                            ? (widget.nivel / widget.dificuldade) / 10
                             : 1,
                       ),
                     ),
@@ -122,10 +125,10 @@ class _TaskState extends State<Task> {
                   Padding(
                     padding: const EdgeInsets.all(12),
                     child: Text(
-                      'Nivel:$nivel',
+                      'Nivel: ${widget.nivel}',
                       style: const TextStyle(color: Colors.white, fontSize: 16),
                     ),
-                  ),
+                  )
                 ],
               ),
             ],

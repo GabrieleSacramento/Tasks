@@ -1,6 +1,6 @@
 {
-    "name": "testando",
-    "short_name": "testando",
+    "name": "testando_a_task",
+    "short_name": "testando_a_task",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
